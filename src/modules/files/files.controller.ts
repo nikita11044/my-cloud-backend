@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { FilesService } from './files.service';
-import { ApiBody, ApiConsumes, ApiTags} from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 @Controller('files')
 @ApiTags('files')
