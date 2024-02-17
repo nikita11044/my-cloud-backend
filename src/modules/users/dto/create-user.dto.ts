@@ -8,8 +8,9 @@ export class CreateUserDto {
 
   @ApiProperty({
     default: 'John Doe',
+    required: false,
   })
-  fullName: string;
+  fullName?: string;
 
   @ApiProperty({
     default: 'pswd',
