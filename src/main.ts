@@ -1,9 +1,8 @@
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
-import { AppModule } from './modules/app/app.module';
+import { AppModule } from './modules';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { HttpExceptionFilter } from '@my-cloud/shared/filters/http-exception.filter';
+import { HttpExceptionFilter, GlobalExceptionsFilter } from './shared';
 import { ConfigService } from '@nestjs/config';
-import { GlobalExceptionsFilter } from '@my-cloud/shared/filters/global-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: false });

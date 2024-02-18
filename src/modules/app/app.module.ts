@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { FilesModule } from '@my-cloud/modules/files/files.module';
-import { UsersModule } from '@my-cloud/modules/users/users.module';
-import { User } from '@my-cloud/modules/users/entities/user.entity';
-import { File } from '@my-cloud/modules/files/entities/file.entity';
+import { FilesModule, File } from '../files';
+import { UsersModule, User } from '../users';
 
 @Module({
   imports: [

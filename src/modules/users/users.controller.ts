@@ -3,16 +3,13 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Post,
   Put,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
-import { CreateUserDto } from '@my-cloud/modules/users/dto/create-user.dto';
-import { UpdateUserDto } from '@my-cloud/modules/users/dto/update-user.dto';
-
+import { CreateUserDto, UpdateUserDto } from './dto';
 @Controller('users')
 @ApiTags('Users')
 export class UsersController {
