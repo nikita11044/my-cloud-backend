@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FilesModule, File } from '../files';
 import { UsersModule, User } from '../users';
+import { MinioModule } from 'nestjs-minio-client';
 
 @Module({
   imports: [
@@ -16,6 +17,13 @@ import { UsersModule, User } from '../users';
       database: process.env.DB_NAME,
       entities: [User, File],
       synchronize: true,
+    }),
+    MinioModule.register({
+      endPoint: '127.0.0.1',
+      port: 9000,
+      useSSL: false,
+      accessKey: 'minio_access_key',
+      secretKey: 'minio_secret_key',
     }),
     UsersModule,
     FilesModule,

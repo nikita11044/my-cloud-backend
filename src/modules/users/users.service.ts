@@ -4,12 +4,14 @@ import { Repository } from 'typeorm';
 import { User } from './entities';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import * as bcrypt from 'bcrypt';
+import { MinioClientService } from '../minioClient';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private repository: Repository<User>,
+    private minioClientService: MinioClientService,
   ) {}
 
   async findByEmail(email: string) {
@@ -33,7 +35,13 @@ export class UsersService {
 
     const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-    return await this.repository.save({ ...dto, password: hashedPassword });
+    const user = await this.repository.save({
+      ...dto,
+      password: hashedPassword,
+    });
+    await this.minioClientService.createBucket(user.id);
+
+    return user;
   }
 
   async update(id: string, dto: UpdateUserDto) {
