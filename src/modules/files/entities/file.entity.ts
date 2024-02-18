@@ -13,9 +13,6 @@ export class File {
   id: string;
 
   @Column()
-  filename: string;
-
-  @Column()
   originalName: string;
 
   @Column()

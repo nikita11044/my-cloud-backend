@@ -6,9 +6,11 @@ import {
   MaxFileSizeValidator,
   Query,
   Delete,
+  UseInterceptors,
 } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('files')
 @ApiTags('Files')
@@ -16,8 +18,9 @@ export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
   @Post()
-  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('file'))
   @ApiBody({
+    required: true,
     schema: {
       type: 'object',
       properties: {
@@ -28,6 +31,7 @@ export class FilesController {
       },
     },
   })
+  @ApiConsumes('multipart/form-data')
   create(
     @UploadedFile(
       new ParseFilePipe({
@@ -41,7 +45,7 @@ export class FilesController {
   }
 
   @Delete()
-  remove(@Query('userId') userId: string, @Query('ids') ids: string) {
+  deleteFile(@Query('userId') userId: string, @Query('ids') ids: string) {
     return this.filesService.delete(userId, ids);
   }
 }

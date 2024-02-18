@@ -12,7 +12,6 @@ export class FilesService {
 
   async create(file: Express.Multer.File, userId: string) {
     return await this.repository.save({
-      filename: file.filename,
       originalName: file.originalname,
       size: file.size,
       mimetype: file.mimetype,
