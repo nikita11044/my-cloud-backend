@@ -1,7 +1,7 @@
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { AppModule } from './modules';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { HttpExceptionFilter, GlobalExceptionsFilter } from './shared';
+import { HttpExceptionFilter } from './shared';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
@@ -10,16 +10,13 @@ async function bootstrap() {
   app.enableCors({ credentials: true, origin: true });
 
   const configService = app.get(ConfigService);
-  const httpAdapterHost = app.get(HttpAdapterHost);
 
-  app.useGlobalFilters(
-    new HttpExceptionFilter(configService),
-    new GlobalExceptionsFilter(httpAdapterHost),
-  );
+  app.useGlobalFilters(new HttpExceptionFilter(configService));
 
   const config = new DocumentBuilder()
     .setTitle('My Cloud')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

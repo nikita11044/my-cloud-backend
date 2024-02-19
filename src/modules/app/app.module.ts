@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { FilesModule, File } from '../files';
 import { UsersModule, User } from '../users';
 import { MinioModule } from 'nestjs-minio-client';
+import { AuthModule } from '../auth';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { MinioModule } from 'nestjs-minio-client';
       accessKey: 'minio_access_key',
       secretKey: 'minio_secret_key',
     }),
+    AuthModule,
     UsersModule,
     FilesModule,
   ],

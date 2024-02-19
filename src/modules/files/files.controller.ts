@@ -7,13 +7,16 @@ import {
   Query,
   Delete,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { JwtAuthGuard } from '../auth';
 
 @Controller('files')
 @ApiTags('Files')
+@UseGuards(JwtAuthGuard)
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
