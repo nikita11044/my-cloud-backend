@@ -6,17 +6,23 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags} from '@nestjs/swagger';
 import { CreateUserDto, UpdateUserDto } from './dto';
+import { JwtAuthGuard } from '../auth';
+import { UserId } from '../../shared';
+
 @Controller('users')
 @ApiTags('Users')
+@ApiBearerAuth()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get(`/:id`)
-  async getUser(@Param('id') id: string) {
+  @UseGuards(JwtAuthGuard)
+  async getUser(@UserId() id: string) {
     return await this.usersService.findById(id);
   }
 
