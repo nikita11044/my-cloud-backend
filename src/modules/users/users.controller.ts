@@ -9,10 +9,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { ApiBearerAuth, ApiBody, ApiTags} from '@nestjs/swagger';
-import { CreateUserDto, UpdateUserDto } from './dto';
-import { JwtAuthGuard } from '../auth';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { UserInputDto, UpdateUserDto } from './dto';
+import { JwtAuthGuard } from '../auth/guards';
 import { UserId } from '../../shared';
+// import {AuthGuard} from "@nestjs/passport";
 
 @Controller('users')
 @ApiTags('Users')
@@ -27,13 +28,13 @@ export class UsersController {
   }
 
   @Post()
-  @ApiBody({ type: CreateUserDto })
-  async createUser(@Body() createUserDto: CreateUserDto) {
+  @ApiBody({ type: UserInputDto })
+  async createUser(@Body() createUserDto: UserInputDto) {
     return await this.usersService.create(createUserDto);
   }
 
   @Put('/:id')
-  @ApiBody({ type: CreateUserDto })
+  @ApiBody({ type: UserInputDto })
   async updateUser(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,

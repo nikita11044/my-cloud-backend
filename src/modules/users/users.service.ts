@@ -2,7 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities';
-import { CreateUserDto, UpdateUserDto } from './dto';
+import { UserInputDto, UpdateUserDto } from './dto';
 import * as bcrypt from 'bcrypt';
 import { MinioClientService } from '../minioClient';
 
@@ -26,7 +26,7 @@ export class UsersService {
     });
   }
 
-  async create(dto: CreateUserDto) {
+  async create(dto: UserInputDto) {
     const existingUser = await this.findByEmail(dto.email);
 
     if (existingUser) {

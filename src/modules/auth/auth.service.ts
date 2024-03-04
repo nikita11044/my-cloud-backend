@@ -1,6 +1,6 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { CreateUserDto, User, UsersService } from '../users';
+import { UserInputDto, User, UsersService } from '../users';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -26,7 +26,7 @@ export class AuthService {
     return null;
   }
 
-  async registerUser(dto: CreateUserDto) {
+  async registerUser(dto: UserInputDto) {
     const { id } = await this.usersService.create(dto);
 
     return {
