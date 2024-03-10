@@ -10,31 +10,30 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { UserInputDto, UpdateUserDto } from './dto';
+import { CreateUserDto, UpdateUserDto } from './dto';
 import { JwtAuthGuard } from '../auth/guards';
 import { UserId } from '../../shared';
-// import {AuthGuard} from "@nestjs/passport";
 
 @Controller('users')
 @ApiTags('Users')
+@UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get(`/:id`)
-  @UseGuards(JwtAuthGuard)
-  async getUser(@UserId() id: string) {
+  @Get(`/me`)
+  async getMe(@UserId() id: string) {
     return await this.usersService.findById(id);
   }
 
   @Post()
-  @ApiBody({ type: UserInputDto })
-  async createUser(@Body() createUserDto: UserInputDto) {
+  @ApiBody({ type: CreateUserDto })
+  async createUser(@Body() createUserDto: CreateUserDto) {
     return await this.usersService.create(createUserDto);
   }
 
   @Put('/:id')
-  @ApiBody({ type: UserInputDto })
+  @ApiBody({ type: CreateUserDto })
   async updateUser(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
