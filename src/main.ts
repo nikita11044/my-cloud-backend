@@ -3,6 +3,7 @@ import { AppModule } from './modules';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HttpExceptionFilter } from './shared';
 import { ConfigService } from '@nestjs/config';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: false });
@@ -12,6 +13,8 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   app.useGlobalFilters(new HttpExceptionFilter(configService));
+
+  app.use(cookieParser());
 
   const config = new DocumentBuilder()
     .setTitle('My Cloud')
