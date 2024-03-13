@@ -29,6 +29,12 @@ export class AuthController {
     return {};
   }
 
+  @Get('/logout')
+  async logout(@Res({ passthrough: true }) res) {
+    res.cookie('token', '', { expires: new Date(Date.now()) });
+    return {};
+  }
+
   @Post('/register')
   @ApiBody({ type: CreateUserDto })
   async register(@Body() dto: CreateUserDto) {
