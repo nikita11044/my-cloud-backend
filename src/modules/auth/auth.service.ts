@@ -28,8 +28,7 @@ export class AuthService {
 
   async registerUser(dto: CreateUserDto) {
     const { id } = await this.usersService.create(dto);
-
-    return this.jwtService.sign({ id });
+    return id;
   }
 
   async login({ id }: User) {
