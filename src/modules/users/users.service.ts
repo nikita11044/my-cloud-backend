@@ -21,9 +21,12 @@ export class UsersService {
   }
 
   async findById(id: string) {
-    return await this.repository.findOneBy({
-      id,
+    const [user] = await this.repository.find({
+      where: { id },
+      select: { id: true, fullName: true, email: true },
     });
+
+    return user;
   }
 
   async create(dto: CreateUserDto) {

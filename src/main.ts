@@ -19,7 +19,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('My Cloud')
     .setVersion('1.0')
-    .addBearerAuth()
+    .addCookieAuth('token')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

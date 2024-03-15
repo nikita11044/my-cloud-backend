@@ -11,7 +11,7 @@ import {
   Get,
 } from '@nestjs/common';
 import { FilesService } from './files.service';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import {ApiCookieAuth, ApiBody, ApiConsumes, ApiTags} from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../auth/guards';
 import { UserId } from '../../shared';
@@ -20,7 +20,7 @@ import { FileTypes } from './entities';
 @Controller('files')
 @ApiTags('Files')
 @UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
+@ApiCookieAuth()
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
