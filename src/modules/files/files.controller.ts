@@ -8,11 +8,14 @@ import {
   Delete,
   UseInterceptors,
   UseGuards,
+  Get,
 } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../auth/guards';
+import { UserId } from '../../shared';
+import { FileTypes } from './entities';
 
 @Controller('files')
 @ApiTags('Files')
@@ -20,6 +23,11 @@ import { JwtAuthGuard } from '../auth/guards';
 @ApiBearerAuth()
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
+
+  @Get()
+  findAll(@UserId() userId: number, @Query('type') fileType: FileTypes) {
+    return this.filesService.findAll(userId, fileType);
+  }
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))

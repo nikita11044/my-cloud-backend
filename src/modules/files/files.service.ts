@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { File } from './entities';
+import { File, FileTypes } from './entities';
 import { In, Repository } from 'typeorm';
 import { MinioClientService } from '../minioClient';
 
@@ -11,6 +11,22 @@ export class FilesService {
     private repository: Repository<File>,
     private minioClientService: MinioClientService,
   ) {}
+
+  async findAll(userId: number, fileType: FileTypes) {
+    const qb = this.repository.createQueryBuilder('file');
+
+    qb.where('file.userId = :userId', { userId });
+
+    if (fileType === FileTypes.PHOTOS) {
+      qb.andWhere('file.mimetype ILIKE :type', { type: '%image%' });
+    }
+
+    if (fileType === FileTypes.TRASH) {
+      qb.withDeleted().andWhere('file.deletedAt IS NOT NULL');
+    }
+
+    return qb.getMany();
+  }
 
   async create(file: Express.Multer.File, userId: string) {
     await this.minioClientService.uploadFile(file, userId);
