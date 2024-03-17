@@ -9,9 +9,10 @@ import {
   UseInterceptors,
   UseGuards,
   Get,
+  ParseFilePipeBuilder, BadRequestException,
 } from '@nestjs/common';
 import { FilesService } from './files.service';
-import {ApiCookieAuth, ApiBody, ApiConsumes, ApiTags} from '@nestjs/swagger';
+import { ApiCookieAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../auth/guards';
 import { UserId } from '../../shared';
@@ -51,13 +52,13 @@ export class FilesController {
       }),
     )
     file: Express.Multer.File,
-    @Query('userId') userId: string,
+    @UserId() userId: string,
   ) {
     return this.filesService.create(file, userId);
   }
 
   @Delete()
-  deleteFile(@Query('userId') userId: string, @Query('ids') ids: string) {
+  deleteFile(@UserId() userId: string, @Query('ids') ids: string) {
     return this.filesService.delete(userId, ids);
   }
 }
