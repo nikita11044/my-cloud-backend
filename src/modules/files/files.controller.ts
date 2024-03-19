@@ -9,7 +9,9 @@ import {
   UseInterceptors,
   UseGuards,
   Get,
-  ParseFilePipeBuilder, BadRequestException,
+  Param,
+  StreamableFile,
+  Res,
 } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { ApiCookieAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
@@ -17,6 +19,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../auth/guards';
 import { UserId } from '../../shared';
 import { FileTypes } from './entities';
+import { type Response } from 'express';
 
 @Controller('files')
 @ApiTags('Files')
@@ -26,8 +29,8 @@ export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
   @Get()
-  findAll(@UserId() userId: number, @Query('type') fileType: FileTypes) {
-    return this.filesService.findAll(userId, fileType);
+  async findAll(@UserId() userId: number, @Query('type') fileType: FileTypes) {
+    return await this.filesService.findAll(userId, fileType);
   }
 
   @Post()
@@ -45,7 +48,7 @@ export class FilesController {
     },
   })
   @ApiConsumes('multipart/form-data')
-  create(
+  async create(
     @UploadedFile(
       new ParseFilePipe({
         validators: [new MaxFileSizeValidator({ maxSize: 1024 * 1024 * 5 })],
@@ -54,11 +57,28 @@ export class FilesController {
     file: Express.Multer.File,
     @UserId() userId: string,
   ) {
-    return this.filesService.create(file, userId);
+    return await this.filesService.create(file, userId);
   }
 
   @Delete()
-  deleteFile(@UserId() userId: string, @Query('ids') ids: string) {
-    return this.filesService.delete(userId, ids);
+  async deleteFile(@UserId() userId: string, @Query('ids') ids: string) {
+    return await this.filesService.delete(userId, ids);
+  }
+
+  @Get('/download/:originalName')
+  async downloadFile(
+    @UserId() userId: string,
+    @Param('originalName') originalName: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { mimetype, stream } = await this.filesService.getFileStream(
+      userId,
+      originalName,
+    );
+    res.set({
+      'Content-Type': `${mimetype}`,
+      'Content-Disposition': `attachment; filename="${originalName}"`,
+    });
+    return new StreamableFile(stream);
   }
 }

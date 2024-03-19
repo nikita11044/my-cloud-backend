@@ -34,4 +34,8 @@ export class MinioClientService {
     await this.minioService.client.removeObjects(bucketName, objectsList);
     return;
   }
+
+  async getFileStream(bucketName: string, objectName: string) {
+    return await this.minioService.client.getObject(bucketName, objectName);
+  }
 }

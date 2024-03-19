@@ -58,4 +58,21 @@ export class FilesService {
 
     return;
   }
+
+  async getFileStream(userId: string, originalName: string) {
+    const { mimetype } = await this.repository
+      .createQueryBuilder('file')
+      .select('file.originalName')
+      .where('file.userId = :userId', { userId })
+      .getOne();
+    const stream = await this.minioClientService.getFileStream(
+      userId,
+      originalName,
+    );
+
+    return {
+      mimetype,
+      stream,
+    };
+  }
 }
