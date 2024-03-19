@@ -22,13 +22,6 @@ import { AuthModule } from '../auth';
       entities: [User, File],
       synchronize: true,
     }),
-    MinioModule.register({
-      endPoint: '127.0.0.1',
-      port: 9000,
-      useSSL: false,
-      accessKey: 'minio_access_key',
-      secretKey: 'minio_secret_key',
-    }),
     AuthModule,
     UsersModule,
     FilesModule,
