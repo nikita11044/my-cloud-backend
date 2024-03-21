@@ -1,10 +1,10 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FilesModule, File } from '../files';
 import { UsersModule, User } from '../users';
-import { MinioModule } from 'nestjs-minio-client';
 import { AuthModule } from '../auth';
+import { LoggerMiddleware } from '../../shared';
 
 @Module({
   imports: [
@@ -27,4 +27,10 @@ import { AuthModule } from '../auth';
     FilesModule,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}
