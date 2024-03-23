@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities';
 import { CreateUserDto, UpdateUserDto } from './dto';
-import * as bcrypt from 'bcrypt';
+import * as bcryptjs from 'bcryptjs';
 import { MinioClientService } from '../minioClient';
 
 @Injectable()
@@ -36,7 +36,7 @@ export class UsersService {
       throw new HttpException(`Email already registered`, 400);
     }
 
-    const hashedPassword = await bcrypt.hash(dto.password, 10);
+    const hashedPassword = await bcryptjs.hash(dto.password, 10);
 
     const user = await this.repository.save({
       ...dto,

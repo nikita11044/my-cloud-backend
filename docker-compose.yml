@@ -1,0 +1,62 @@
+version: "3.7"
+
+services:
+  postgres:
+    container_name: my-cloud-postgres
+    image: postgres:latest
+    restart: always
+    hostname: ${DB_HOST}
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    networks:
+      - my-cloud-api
+
+  minio:
+    container_name: my-cloud-minio
+    image: minio/minio:latest
+    restart: always
+    hostname: ${MINIO_ENDPOINT}
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+    ports:
+      - ${MINIO_PORT}:${MINIO_PORT}
+    command: server --console-address ":9001" /data
+    networks:
+      - my-cloud-api
+
+  api:
+    container_name: api
+    image: my-cloud-backend
+    build: '.'
+    restart: unless-stopped
+    command: npm run start
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      - PORT=${PORT}
+      - MODE=${MODE}
+      - SECRET_KEY=${SECRET_KEY}
+      - EXPIRES_IN=${EXPIRES_IN}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - MINIO_ENDPOINT=${MINIO_ENDPOINT}
+      - MINIO_PORT=${MINIO_PORT}
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+    depends_on:
+      - postgres
+      - minio
+    networks:
+      - my-cloud-api
+
+networks:
+  my-cloud-api:
+    driver: bridge
