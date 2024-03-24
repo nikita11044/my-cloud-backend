@@ -6,6 +6,8 @@ services:
     image: postgres:latest
     restart: always
     hostname: ${DB_HOST}
+    volumes:
+      - ./docker/pgdata:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -20,6 +22,8 @@ services:
     image: minio/minio:latest
     restart: always
     hostname: ${MINIO_ENDPOINT}
+    volumes:
+      - ./docker/minio:/data
     environment:
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
@@ -37,6 +41,8 @@ services:
     command: npm run start
     ports:
       - ${PORT}:${PORT}
+    volumes:
+      - ./logs:/app/api/logs
     environment:
       - PORT=${PORT}
       - MODE=${MODE}
@@ -56,6 +62,13 @@ services:
       - minio
     networks:
       - my-cloud-api
+
+volumes:
+  pgdata:
+    external: true
+  minio:
+    external: true
+  logs:
 
 networks:
   my-cloud-api:
