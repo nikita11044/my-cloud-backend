@@ -46,8 +46,8 @@ services:
     environment:
       - PORT=${PORT}
       - MODE=${MODE}
-      - SECRET_KEY=${SECRET_KEY}
-      - EXPIRES_IN=${EXPIRES_IN}
+      - SECRET_KEY=${JWT_SECRET_KEY}
+      - EXPIRES_IN=${JWT_EXPIRES_IN}
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
       - DB_USERNAME=${DB_USERNAME}
