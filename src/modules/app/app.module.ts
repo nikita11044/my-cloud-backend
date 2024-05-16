@@ -9,7 +9,6 @@ import { LoggerModule } from '../logger';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env.local',
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({

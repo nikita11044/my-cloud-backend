@@ -17,7 +17,7 @@ LOG_DIRECTORY=logs
 JWT_SECRET_KEY=secret123
 JWT_EXPIRES_IN=30d
 
-DB_HOST=postgres
+DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=postgres
 DB_PASSWORD=postgres
